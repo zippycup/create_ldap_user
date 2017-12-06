@@ -66,6 +66,5 @@ user_ou_list:
   - it
 
 user_attributes:
-#  - email
   - mobile
   - title

@@ -3,7 +3,7 @@
 ## Description
 
 This utility will allow you to manage ldap users.
-You can create either posix user for use on linux hosts or organizationalPerson for use for company employees.
+You can create either posix user ( type: posix ) for use on linux hosts or organizationalPerson (type: user) for use for company employees.
 
 ## Requirements
 
@@ -21,15 +21,32 @@ server_uri: ldap://mydomain.net
 bind_dn: cn=admin,dc=mydomain,dc=net
 bind_pw: mypassword
 ```
+
+It is recommended that you use ansible-vault encrypt secure.yml
+
 edit vars/ldap.yml
 ```
 ldap_base: ou=People,dc=mydomain,dc=net
 ldap_group: ou=Group,dc=mydomain,dc=net
 ```
+You can add additional attributes to organizationalPerson by updating group_vars/all
+
+```
+user_attributes:
+  - mobile
+  - title
+```
+
+## Running utility
+
+Note: add the following to debug
+- -vvv
+- -e debug_play=true
 
 
-## posix
+### posix user
 
+single user only
 ```
 # add
 ansible-playbook create_ldap_user.yml -e user=aauser -e type=posix
@@ -53,16 +70,16 @@ ansible-playbook create_ldap_user.yml -e user=aauser,aauser1 -e type=posix --tag
 ansible-playbook create_ldap_user.yml -e user=aauser,aauser1 -e type=posix --tags remove -e force=true
 ```
 
-## organizationalPerson
+### organizationalPerson user
 
 single user only
 ```
 # add
-ansible-playbook create_ldap_user.yml -e user=aauser -e type=user  -e firstname=first -e lastname=lastname -e title=title -e mobile=mobile -vvv
+ansible-playbook create_ldap_user.yml -e user=aauser -e type=user  -e firstname=first -e lastname=lastname -e title=title -e mobile=mobile
 
 # edit
-ansible-playbook create_ldap_user.yml -e user=aauser -e type=user  -e firstname=first -e lastname=lastname -e title=title -e mobile=mobile -vvv  --tags edit   -e force=true
+ansible-playbook create_ldap_user.yml -e user=aauser -e type=user  -e firstname=first -e lastname=lastname -e title=title -e mobile=mobile --tags edit   -e force=true
 
 # remove
-ansible-playbook create_ldap_user.yml -e user=aauser -e type=user  -e firstname=first -e lastname=lastname -e title=title -e mobile=mobile -vvv  --tags remove -e force=true
+ansible-playbook create_ldap_user.yml -e user=aauser -e type=user  -e firstname=first -e lastname=lastname -e title=title -e mobile=mobile --tags remove -e force=true
 ```
