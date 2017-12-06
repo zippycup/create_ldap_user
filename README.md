@@ -42,7 +42,7 @@ user_attributes:
 Note: add the following to debug
 - -vvv
 - -e debug_play=true
-
+- -e dry_run=true
 
 ### posix user
 
