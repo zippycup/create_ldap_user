@@ -16,8 +16,8 @@ default_attributes:
  - ou
 
 type_list:
-  - posix
-  - user
+ - posix
+ - user
 
 ldap_domain: mydomain
 ldap_domain_suffix: net
@@ -36,19 +36,12 @@ loginShell: '/bin/bash'
 home_root: '/home'
 
 posix_objectclass:
-  - top
-  - posixAccount
-  - inetOrgPerson
+ - top
+ - posixAccount
+ - inetOrgPerson
 
 posix_ou_list:
-  - it
-
-user_parameters:
-  - firstname
-  - lastname
-  - email
-  - mobile
-  - title
+ - it
 
 posix_attributes:
  - uidNumber
@@ -61,18 +54,24 @@ posix_attributes:
 user_ldap_base_ou: People
 
 user_objectclass:
-  - top
-  - person
-  - organizationalPerson
-  - inetOrgPerson
+ - top
+ - person
+ - organizationalPerson
+ - inetOrgPerson
 
 user_ou_list:
-  - marketing
-  - sales
-  - consultant
-  - hr
-  - it
+ - marketing
+ - sales
+ - consultant
+ - hr
+ - it
 
 user_attributes:
-  - mobile
-  - title
+ - mobile
+ - title
+
+user_parameters:
+ - firstname
+ - lastname
+ - mobile
+ - title
