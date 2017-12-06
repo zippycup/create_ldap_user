@@ -1,0 +1,33 @@
+---
+
+- name: debug current_user
+  debug:
+    msg: "{{current_user}}"
+  when: debug_play
+
+- name: "Direct lookup {{current_user}}"
+  set_fact:
+    lookup_user: "{{ lookup('ldap', current_user, context='people_members_uid') }}"
+
+- name: "debug lookup_user"
+  debug:
+    msg: "{{lookup_user}}"
+  when: debug_play and lookup_user is defined
+
+- name: "fail if not found"
+  fail:
+    msg: "cannot find user {{current_user}}"
+  when:
+    - lookup_user == []
+
+- name: include_tasks remove_ldap_user.yml
+  include_tasks: remove_ldap_user.yml
+  when:
+    - lookup_user is defined
+    - not dry_run
+
+- name: include_tasks remove_posix_group.yml
+  include_tasks: remove_posix_group.yml
+  when:
+    - type == 'posix'
+    - not dry_run

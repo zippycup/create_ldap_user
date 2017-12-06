@@ -1,0 +1,22 @@
+---
+
+- name: "Direct lookup group {{current_user}}"
+  set_fact:
+    current_group: "{{ lookup('ldap', current_user, context='group_members_cn') }}"
+
+- name: "debug current_group"
+  debug:
+    msg: "{{current_group}}"
+  when: debug_play and current_group is defined
+
+- name: "remove ldap group cn entry"
+  ldap_entry:
+    dn: "cn={{current_user}},{{ldap_group}}"
+    server_uri: "{{server_uri}}"
+    bind_dn: "{{bind_dn}}"
+    bind_pw: "{{bind_pw}}"
+    state: absent
+  when:
+    - current_group is defined
+    - not dry_run
+    - type == 'posix'

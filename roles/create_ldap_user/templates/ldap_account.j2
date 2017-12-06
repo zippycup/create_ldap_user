@@ -1,0 +1,16 @@
+---
+
+- name: "create ldap entry {{current_user}}"
+  ldap_entry:
+    dn: "uid={{current_user}},{{ldap_base}}"
+    server_uri: "{{server_uri}}"
+    bind_dn: "{% raw %}{{{% endraw %}bind_dn{% raw %}}}{% endraw %}"
+    bind_pw: "{% raw %}{{{% endraw %}bind_pw{% raw %}}}{% endraw %}"
+    objectClass:
+{% for current_objectclass in ldap_objectclass %}
+      - {{current_objectclass}}
+{% endfor %}
+    attributes:
+{% for current_attribute in ldap_attributes %}
+      {{current_attribute}}: "{% raw %}{{{% endraw %}{{current_attribute}}{% raw %}}}{% endraw %}"
+{% endfor %}

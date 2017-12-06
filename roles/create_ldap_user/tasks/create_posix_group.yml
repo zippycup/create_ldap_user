@@ -1,0 +1,29 @@
+---
+
+- name: "Direct lookup group {{current_user}}"
+  set_fact:
+    current_group: "{{ lookup('ldap', current_user, context='group_members_cn') }}"
+
+- name: "Direct lookup {{current_user}}"
+  set_fact:
+    lookup_user: "{{ lookup('ldap', current_user, context='people_members_uid') }}"
+
+- name: "create group cn ldap entry"
+  ldap_entry:
+    dn: "cn={{current_user}},{{ldap_group}}"
+    server_uri: "{{server_uri}}"
+    bind_dn: "{{bind_dn}}"
+    bind_pw: "{{bind_pw}}"
+    objectClass:
+      - top
+      - posixGroup
+    attributes:
+      cn: "{{current_user}}"
+      gidNumber: "{{ lookup_user['gidNumber']}}"
+      description: "For use with user {{current_user}}"
+  when:
+    - lookup_user is defined
+    - lookup_user['gidNumber'] is defined
+    - current_group is defined
+    - current_group == []
+    - not dry_run

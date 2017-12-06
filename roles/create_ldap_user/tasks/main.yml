@@ -1,0 +1,38 @@
+---
+
+- name: include_tasks pre_check.yml
+  include_tasks: pre_check.yml
+  tags: ['query', 'add', 'edit', 'remove']
+
+- name: include_tasks set_fact.yml
+  include_tasks: set_fact.yml
+  tags: ['query', 'add', 'edit', 'remove']
+
+- name: include_tasks query_ldap.yml
+  include_tasks: query_ldap.yml
+  tags: ['query_ldap', 'add', 'edit', 'remove']
+  when:
+    - type == 'posix'
+
+- name: include_tasks add_ldap_user.yml
+  include_tasks: add_ldap_user.yml
+  with_items: "{{user_list}}"
+  loop_control:
+    loop_var: current_user
+  tags: ['add']
+
+- name: include_tasks edit_ldap_user.yml
+  include_tasks: edit_ldap_user.yml
+  with_items: "{{user_list}}"
+  loop_control:
+    loop_var: current_user
+  tags: ['edit']
+  when: force
+
+- name: include_tasks remove_user.yml
+  include_tasks: remove_user.yml
+  with_items: "{{user_list}}"
+  loop_control:
+    loop_var: current_user
+  tags: ['remove']
+  when: force

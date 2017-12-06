@@ -1,0 +1,22 @@
+---
+
+- name: "set_fact max_uidNumber"
+  set_fact:
+    max_uidNumber: "{{max_uidNumber}}"
+
+- name: "set_fact max_uidNumber"
+  set_fact:
+    max_uidNumber: "{{item.uidNumber}}"
+  with_ldap:
+    - context: people_members_uid
+    - '*'
+  when: item.uidNumber|int > uidNumber_start and item.uidNumber|int < uidNumber_end and item.uidNumber|int > max_uidNumber|int
+
+- name: "debug max_uidNumber"
+  debug:
+    msg: "{{max_uidNumber}}"
+  when: debug_play
+
+- name: 'set uidNumber'
+  set_fact:
+    uidNumber: "{{max_uidNumber}}"

@@ -1,0 +1,69 @@
+---
+
+- name: debug current_user
+  debug:
+    msg: "{{current_user}}"
+  when: debug_play
+
+- name: "Direct lookup {{current_user}}"
+  set_fact:
+    lookup_user: "{{ lookup('ldap', current_user, context='people_members_uid') }}"
+
+- name: "debug lookup_user"
+  debug:
+    msg: "{{lookup_user}}"
+  when: debug_play and lookup_user is defined
+
+- name: "fail if not found"
+  fail:
+    msg: "cannot find user {{current_user}}"
+  when:
+    - lookup_user == []
+
+- name: include_tasks remove_ldap_user.yml
+  include_tasks: remove_ldap_user.yml
+  when:
+    - type == 'posix'
+    - lookup_user is defined
+    - lookup_user['uidNumber'] is defined
+    - lookup_user['gidNumber'] is defined
+    - lookup_user['uidNumber'] == lookup_user['gidNumber']
+    - not dry_run
+
+- name: include_tasks remove_ldap_user.yml
+  include_tasks: remove_ldap_user.yml
+  when:
+    - type == 'user'
+    - lookup_user is defined
+    - lookup_user['term'] is defined
+    - not dry_run
+
+- name: set_fact existing user
+  set_fact:
+    uidNumber: "{{lookup_user['uidNumber']}}"
+    gidNumber: "{{lookup_user['uidNumber']}}"
+  when:
+    type == 'posix'
+
+- name: "include task: ldap_helper.yml"
+  include_tasks: ./ldap_helper.yml
+
+- name: "generate {{current_user}}/ldap.yml"
+  template:
+    src: ./roles/create_ldap_user/templates/ldap_account.j2
+    dest: "./temp/{{current_user}}/ldap.yml"
+
+- name: "include tasks {{current_user}}/ldap.yml"
+  include_tasks: "./temp/{{current_user}}/ldap.yml"
+
+- name: include_tasks remove_posix_group.yml
+  include_tasks: remove_posix_group.yml
+  when:
+    - type == 'posix'
+    - not dry_run
+
+- name: include_tasks create_posix_group.yml
+  include_tasks: ./create_posix_group.yml
+  when:
+    - type == 'posix'
+    - not dry_run

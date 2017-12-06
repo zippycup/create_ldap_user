@@ -1,0 +1,9 @@
+---
+
+- name: "remove ldap uid entry"
+  ldap_entry:
+    dn: "uid={{current_user}},{{ldap_base}}"
+    server_uri: "{{server_uri}}"
+    bind_dn: "{{bind_dn}}"
+    bind_pw: "{{bind_pw}}"
+    state: absent

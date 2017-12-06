@@ -1,0 +1,9 @@
+---
+
+- name: generate user_parameter task
+  template:
+    src: ./roles/create_ldap_user/templates/check_user_parameter.j2
+    dest: "./temp/{{user_list[0]}}/parameter/{{user_parameter.key}}_user_parameter.yml"
+
+- name: "include task {{user_parameter}}"
+  include_tasks: "./temp/{{user_list[0]}}/parameter/{{user_parameter.key}}_user_parameter.yml"

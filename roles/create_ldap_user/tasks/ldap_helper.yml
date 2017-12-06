@@ -1,0 +1,25 @@
+---
+
+- name: set_fact description
+  set_fact:
+    description: "{{user_description}}: {{current_user}}"
+    cn: "{{firstname}}"
+    sn: "{{lastname}}"
+    displayName: "{{firstname}} {{lastname}}"
+    givenName: "{{lastname}}"
+    uid: "{{firstname}}.{{lastname}}"
+  when:
+    - type == 'user'
+
+- name: set_fact description
+  set_fact:
+    description: "{{user_description}}: {{current_user}}"
+    cn: "{{current_user}}"
+    uid: "{{current_user}}"
+    sn: "{{current_user}}"
+    displayName: "{{current_user}}"
+    givenName: "{{current_user}}"
+    gidNumber: "{{uidNumber}}"
+    homeDirectory: "{{home_root}}/{{current_user}}"
+  when:
+    - type == 'posix'

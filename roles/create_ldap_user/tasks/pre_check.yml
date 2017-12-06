@@ -1,0 +1,30 @@
+---
+
+- name: check user parameter
+  fail:
+    msg: "user is a required parameter"
+  when: user == 'None'
+
+- name: check type parameter
+  fail:
+    msg: "type is a required parameter"
+  when: type == 'None'
+
+- name: check valid type
+  fail:
+    msg: "type is not valid in list {{type_list}}"
+  when: type not in type_list
+
+- name: check valid ou
+  fail:
+    msg: "ou is not valid in list {{user_ou_list}}"
+  when: 
+    - ou not in user_ou_list
+    - type == 'user'
+
+- name: check valid ou
+  fail:
+    msg: "ou is not valid in list {{posix_ou_list}}"
+  when:
+    - ou not in posix_ou_list
+    - type == 'posix'

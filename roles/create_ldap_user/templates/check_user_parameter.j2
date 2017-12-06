@@ -1,0 +1,6 @@
+---
+
+- name: "check {{user_parameter.key}} parameter"
+  fail:
+    msg: "{{user_parameter.key}} is a required parameter"
+  when: {{user_parameter.key}} == 'None'

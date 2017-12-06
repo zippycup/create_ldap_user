@@ -1,0 +1,53 @@
+---
+
+- name: set_fact home_root
+  set_fact:
+    home_root: '/home'
+
+- name: set_fact user_description
+  set_fact:
+    user_description: 'generic apps user'
+
+- name: set_fact ou
+  set_fact:
+    ou: "{{ou}}"
+
+- name: set_fact user_list
+  set_fact:
+    user_list: "{{user_list | default([]) }} + [ '{{user}}' ]"
+  when:
+    - "',' not in user"
+
+- name: set_fact user_list
+  set_fact:
+    user_list: "{{ (user | replace(' ','')).split(',') }}"
+  when:
+    - "',' in user"
+    - type == 'posix'
+
+- name: check username
+  fail:
+    msg: 'user type one accepts one user'
+  when:
+    - "',' in user"
+    - type == 'user'
+
+- name: set_fact ldap_objectclass
+  set_fact:
+    ldap_objectclass: "{{posix_objectclass}}"
+    ldap_attributes: "{{default_attributes}} + {{posix_attributes}}"
+  when:
+    - type == 'posix'
+
+- name: set_fact ldap_objectclass
+  set_fact:
+    ldap_objectclass: "{{user_objectclass}}"
+    ldap_attributes: "{{default_attributes}} + {{user_attributes}}"
+  when:
+    - type == 'user'
+
+- name: Create temp
+  file:
+    path: "./temp/{{item}}/parameter"
+    state: directory
+  with_items: "{{user_list}}"

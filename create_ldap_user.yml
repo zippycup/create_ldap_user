@@ -1,0 +1,10 @@
+---
+
+- hosts: localhost
+  connection: local
+  vars_files:
+    - "./vars/secure.yml"
+    - "./vars/ldap.yml"
+
+  roles:
+    - create_ldap_user

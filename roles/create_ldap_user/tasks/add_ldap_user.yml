@@ -1,0 +1,54 @@
+---
+
+- name: debug current_user
+  debug:
+    msg: "{{current_user}}"
+  when: debug_play
+
+- name: "Direct lookup user {{current_user}}"
+  set_fact:
+    lookup_user: "{{ lookup('ldap', current_user, context='people_members_uid') }}"
+
+- name: "debug lookup_user"
+  debug:
+    msg: "{{lookup_user}}"
+  when: debug_play and lookup_user is defined
+
+- name: 'set uidNumber'
+  set_fact:
+    uidNumber: "{{uidNumber|int + 1}}"
+  when: 
+    - lookup_user is defined and lookup_user == []
+    - type == 'posix'
+
+- name: "debug uidNumber"
+  debug:
+    msg: "{{uidNumber}}"
+  when:
+    - debug_play
+    - type == 'posix'
+
+- name: "include task: ldap_helper.yml"
+  include_tasks: ./ldap_helper.yml
+
+- name: "generate {{current_user}}/ldap.yml"
+  template:
+    src: ./roles/create_ldap_user/templates/ldap_account.j2
+    dest: "./temp/{{current_user}}/ldap.yml"
+  when:
+    - lookup_user is defined
+    - lookup_user == []
+    - not dry_run
+
+- name: "include tasks {{current_user}}/ldap.yml"
+  include_tasks: "./temp/{{current_user}}/ldap.yml"
+  when:
+    - lookup_user is defined
+    - lookup_user == []
+    - not dry_run
+
+- name: include_tasks create_posix_group.yml
+  include_tasks: ./create_posix_group.yml
+  when:
+    - type == 'posix'
+    - not dry_run

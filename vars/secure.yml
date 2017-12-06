@@ -1,0 +1,5 @@
+---
+
+server_uri: ldap://mydomain.net
+bind_dn: cn=admin,dc=mydomain,dc=net
+bind_pw: mypassword

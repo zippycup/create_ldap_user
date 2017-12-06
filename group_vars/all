@@ -1,0 +1,71 @@
+---
+debug_play: False
+dry_run: False
+force: False
+
+# default ou
+ou: it
+
+default_attributes:
+ - description
+ - cn
+ - uid
+ - sn
+ - displayName
+ - givenName
+ - ou
+
+type_list:
+  - posix
+  - user
+
+############## Posix ( type: posix )
+
+uidNumber_start: 17000
+uidNumber_end: 19999
+max_uidNumber: 17000
+ldap_group_id: 17000
+
+loginShell: '/bin/bash'
+home_root: '/home'
+
+posix_objectclass:
+  - top
+  - posixAccount
+  - inetOrgPerson
+
+posix_ou_list:
+  - it
+
+user_parameters:
+  - firstname
+  - lastname
+  - email
+  - mobile
+  - title
+
+posix_attributes:
+ - uidNumber
+ - gidNumber
+ - loginShell
+ - homeDirectory
+
+############ organizationalPerson ( type: user)
+
+user_objectclass:
+  - top
+  - person
+  - organizationalPerson
+  - inetOrgPerson
+
+user_ou_list:
+  - marketing
+  - sales
+  - consultant
+  - hr
+  - it
+
+user_attributes:
+#  - email
+  - mobile
+  - title
