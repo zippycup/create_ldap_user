@@ -1,7 +1,7 @@
 ---
 
-ldap_base: ou=People,dc=mydomain,dc=net
-ldap_group: ou=Group,dc=mydomain,dc=net
+ldap_base: "ou={{ldap_base_ou}},dc={{ldap_domain}},dc={{ldap_domain_suffix}}"
+ldap_group: "ou={{ldap_base_group}},dc={{ldap_domain}},dc={{ldap_domain_suffix}}"
 
 
 # Standard ansible ldap library

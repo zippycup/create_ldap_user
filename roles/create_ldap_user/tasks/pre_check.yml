@@ -18,7 +18,7 @@
 - name: check valid ou
   fail:
     msg: "ou is not valid in list {{user_ou_list}}"
-  when: 
+  when:
     - ou not in user_ou_list
     - type == 'user'
 

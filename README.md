@@ -22,12 +22,12 @@ bind_dn: cn=admin,dc=mydomain,dc=net
 bind_pw: mypassword
 ```
 
-It is recommended that you use ansible-vault encrypt secure.yml
+It is recommended that you use ansible-vault to encrypt secure.yml
 
-edit vars/ldap.yml
+edit group_vars/all
 ```
-ldap_base: ou=People,dc=mydomain,dc=net
-ldap_group: ou=Group,dc=mydomain,dc=net
+ldap_domain: mydomain
+ldap_domain_suffix: net
 ```
 You can add additional attributes to organizationalPerson by updating group_vars/all
 

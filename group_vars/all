@@ -19,7 +19,13 @@ type_list:
   - posix
   - user
 
+ldap_domain: mydomain
+ldap_domain_suffix: net
+ldap_base_group: Group
+
 ############## Posix ( type: posix )
+
+posix_ldap_base_ou: People
 
 uidNumber_start: 17000
 uidNumber_end: 19999
@@ -51,6 +57,8 @@ posix_attributes:
  - homeDirectory
 
 ############ organizationalPerson ( type: user)
+
+user_ldap_base_ou: People
 
 user_objectclass:
   - top

@@ -17,7 +17,7 @@
 - name: 'set uidNumber'
   set_fact:
     uidNumber: "{{uidNumber|int + 1}}"
-  when: 
+  when:
     - lookup_user is defined and lookup_user == []
     - type == 'posix'
 
